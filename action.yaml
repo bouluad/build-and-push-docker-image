@@ -27,16 +27,19 @@ runs:
   using: "composite"
   steps:
     - name: Checkout code
+      shell: bash
       run: |
         git clone https://github.com/${{ github.repository }} /tmp/workspace
         cd /tmp/workspace
         git checkout ${{ github.sha }}
 
     - name: Build Docker image
+      shell: bash
       run: |
         docker build ${{ inputs.build-args }} -t ${{ inputs.image-name }}${{ inputs.dockerfile-path && ' -f ' + inputs.dockerfile-path }} .
 
     - name: Tag Docker image
+      shell: bash
       run: |
         docker tag ${{ inputs.image-name }} ${{ inputs.registry-url }}/${{ inputs.image-name }}
 
@@ -45,5 +48,6 @@ runs:
         docker login -u ${{ inputs.registry-username }} -p ${{ inputs.registry-password }} ${{ inputs.registry-url }}
 
     - name: Push Docker image
+      shell: bash
       run: |
         docker push ${{ inputs.registry-url }}/${{ inputs.image-name }}
