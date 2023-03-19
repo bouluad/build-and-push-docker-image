@@ -34,9 +34,9 @@ runs:
         git checkout ${{ github.sha }}
 
     - name: Build Docker image
-      shell: bash
       run: |
         docker build ${{ inputs.build-args }} -t ${{ inputs.image-name }}${{ inputs.dockerfile-path && ' -f ' + inputs.dockerfile-path }} .
+      shell: bash
 
     - name: Tag Docker image
       shell: bash
@@ -44,6 +44,7 @@ runs:
         docker tag ${{ inputs.image-name }} ${{ inputs.registry-url }}/${{ inputs.image-name }}
 
     - name: Login to Docker registry
+      shell: bash
       run: |
         docker login -u ${{ inputs.registry-username }} -p ${{ inputs.registry-password }} ${{ inputs.registry-url }}
 
