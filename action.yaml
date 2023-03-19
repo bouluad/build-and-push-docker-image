@@ -7,6 +7,8 @@ inputs:
   dockerfile-path:
     description: 'The path to the Dockerfile to build the image from.'
     required: false
+    default: 'Dockerfile'
+
   image-name:
     description: 'The name to give the Docker image, including any repository and tag information.'
     required: true
@@ -42,7 +44,10 @@ runs:
     - name: Tag Docker image
       shell: bash
       run: |
-        docker tag ${{ inputs.image-name }} ${{ inputs.registry-url }}/${{ inputs.image-name }}
+              build_args="${{ inputs.build-args }}"
+              dockerfile_path="${{ inputs.dockerfile-path }}"
+              docker build -t ${{ inputs.image-name }}:${{ inputs.image-version }}${{ dockerfile_path != 'Dockerfile' ? " -f " + dockerfile_path : "" }} ${build_args:+--build-arg $build_args} .
+              echo "::set-output name=image-tag::${{ inputs.image-name }}:${{ inputs.image-version }}"
 
     - name: Login to Docker registry
       shell: bash
