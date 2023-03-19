@@ -22,6 +22,7 @@ inputs:
   build-args:
     description: 'Optional build arguments to pass to the Docker build command.'
     required: false
+    default: ''
 
 runs:
   using: "composite"
